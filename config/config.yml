@@ -1,0 +1,7 @@
+page_token: "EAAEECnAvz4sBANrcQYC6MBfs69GfPZAJsZB0PVQMmrGyAKHTtcIjli6SvN7rEgnZCqkc0lsgB8IHXx7yugpadQrZC53VK2SbqpSuG6ZCW1NarYqWtLuyTT9VXMnH04uNSdQmLO8jU9BMxCiDgWcuzOQv45WB9jjaacIwE5tjufAZDZD"
+database:
+  adapter: 'mysql2' # or 'postgresql' or 'sqlite3'
+  host: 'localhost'
+  database: 'thebridge_development'
+  username: 'root'
+  password: ''
