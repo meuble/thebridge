@@ -1,4 +1,4 @@
-require 'HTTParty'
+require 'httparty'
 
 module Lithium
   def self.get_lithium_posts(data)
