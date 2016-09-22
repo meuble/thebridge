@@ -26,7 +26,7 @@ end
 
 route_with({
   "localhost" => Messenger,
-  "meuble.pagekite.me" => Messenger
+  "meuble.pagekite.me" => Messenger,
   "hpbot.herokuapp.com" => Messenger
 })
 
