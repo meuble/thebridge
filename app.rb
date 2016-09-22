@@ -15,10 +15,6 @@ class Messenger < Sinatra::Base
   set :haml, :format => :html5
 
   get '/' do
-    erb :index
-  end
-
-  get '/receive' do
     if params["hub.verify_token"] == "secret_pass"
       params["hub.challenge"]
     else
@@ -26,7 +22,7 @@ class Messenger < Sinatra::Base
     end
   end
 
-  post '/receive' do
+  post '/' do
     request.body.rewind
     messenger_params = JSON.parse(request.body.read)
     ap messenger_params

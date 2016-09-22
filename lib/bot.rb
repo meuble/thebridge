@@ -11,19 +11,30 @@ module Bot
         user = User.where(:sender_id => message["sender"]["id"]).first || User.create(:sender_id => message["sender"]["id"])
         ap user
         ap message["message"]["text"]
-        if user.bot_finished? || message["message"]["text"].downcase == "customer service"
-          user.update_attributes(:bot_finished => true)
-        else
-          items = Lithium::get_lithium_posts(message["message"]["text"])
-          send_structured_message(message["sender"]["id"], items)
-        end
-        if user.bot_finished? && message["message"]["text"].downcase == "community bot"
-          user.update_attributes(:bot_finished => false)
+        if message["message"]["text"]
+          if user.bot_finished? || message["message"]["text"].downcase == "customer service"
+            user.update_attributes(:bot_finished => true)
+          else
+            items = Lithium::get_lithium_posts(message["message"]["text"])
+            send_structured_message(message["sender"]["id"], items)
+          end
+          if user.bot_finished? && message["message"]["text"].downcase == "community bot"
+            user.update_attributes(:bot_finished => false)
+          end
         end
       else
-        if message["postback"] && message["postback"]["payload"].downcase == "agent"
-          send_message(message["sender"]["id"], "We need you to actualy say it. Can you type ‘customer service’, please ?")
+        user = User.where(:sender_id => message["sender"]["id"]).first || User.create(:sender_id => message["sender"]["id"])
+        ap user
+        
+        if message["postback"] && message["postback"]["payload"].downcase == "stop_bot"
+          user.update_attributes(:bot_finished => true)
+          send_message(message["sender"]["id"], "Ok, my job is done. Now you'll be talking an HP agent.")
         end
+        if message["postback"] && message["postback"]["payload"].downcase == "start_bot"
+          user.update_attributes(:bot_finished => false)
+          send_message(message["sender"]["id"], "Just ask me any question, I will search through the Community for you.")
+        end
+
       end
     end
   end
@@ -36,7 +47,7 @@ module Bot
         :subtitle => "There is no posts related to your question.",
           :buttons => [{
             :type => "web_url",
-            :url => "https://linc4.stage.lithium.com/t5/forums/postpage",
+            :url => "https://h30434.www3.hp.com/t5/forums/postpage",
             :title => "Ask the community !"
           }, agent_button]
         }]
@@ -51,7 +62,7 @@ module Bot
             :title => "Read it !"
           }, {
             :type => "web_url",
-            :url => "https://linc4.stage.lithium.com/t5/forums/postpage",
+            :url => "https://h30434.www3.hp.com/t5/forums/postpage",
             :title => "Ask the community !"
           }, agent_button]
         }
@@ -111,4 +122,63 @@ module Bot
         :body => body.to_json,
         :headers => { 'Content-Type' => 'application/json' } )
   end
+
+  def self.set_persistent_menu
+    body = {
+      :setting_type => "call_to_actions",
+      :thread_state => "existing_thread",
+      :call_to_actions => [
+         {
+           :type => "postback",
+           :title => "Ask the Community Bot",
+           :payload => "start_bot"
+         },
+         {
+           :type => "postback",
+           :title => "Ask an HP agent",
+           :payload => "stop_bot"
+         },
+         {
+           :type => "web_url",
+           :title => "Visit HP Instant Ink",
+           :url => "https://instantink.hpconnected.com/fr/fr"
+         }
+       ]
+    }
+    HTTParty.post("https://graph.facebook.com/v2.6/me/thread_settings?access_token=#{Setting.config["page_token"]}",
+        :body => body.to_json,
+        :headers => { 'Content-Type' => 'application/json' } )
+    
+  end
+  
+  def self.set_start_message
+    body = {
+      :setting_type => "greeting",
+      :greeting => {
+        :text => "Welcome to HP for Customer ! How can I help you ?\nWhy don't you start by asking our bot for community content ?"
+      }
+    }
+    HTTParty.post("https://graph.facebook.com/v2.6/me/thread_settings?access_token=#{Setting.config["page_token"]}",
+        :body => body.to_json,
+        :headers => { 'Content-Type' => 'application/json' } )
+  end
+  
+  def self.set_call_to_action
+    body = {
+      :setting_type => "call_to_actions",
+      :thread_state => "new_thread",
+      :call_to_actions => [
+        {
+          :type => "postback",
+          :title => "Start the bot",
+          :payload => "START_BOT"
+        }
+      ]
+    }
+      HTTParty.post("https://graph.facebook.com/v2.6/me/thread_settings?access_token=#{Setting.config["page_token"]}",
+          :body => body.to_json,
+          :headers => { 'Content-Type' => 'application/json' } )
+      
+  end
+    
 end
