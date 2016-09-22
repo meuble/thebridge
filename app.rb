@@ -9,7 +9,7 @@ require "./lib/user.rb"
 require "./lib/bot.rb"
 require "./lib/setting.rb"
 
-ActiveRecord::Base.establish_connection(Setting.config["database"])
+ActiveRecord::Base.establish_connection(ENV["CLEARDB_DATABASE_URL"] || Setting.config["database"])
 
 class Messenger < Sinatra::Base
   set :haml, :format => :html5
