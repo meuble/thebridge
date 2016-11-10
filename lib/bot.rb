@@ -28,7 +28,7 @@ module Bot
         
         if message["postback"] && message["postback"]["payload"].downcase == "stop_bot"
           user.update_attributes(:bot_finished => true)
-          send_message(message["sender"]["id"], "Ok, my job is done. Now you'll be talking an HP agent.")
+          send_message(message["sender"]["id"], "Ok, my job is done. Now you'll be talking a Sony agent.")
         end
         if message["postback"] && message["postback"]["payload"].downcase == "start_bot"
           user.update_attributes(:bot_finished => false)
@@ -47,9 +47,9 @@ module Bot
         :subtitle => "There is no posts related to your question.",
           :buttons => [{
             :type => "web_url",
-            :url => "https://h30434.www3.hp.com/t5/forums/postpage",
+            :url => "https://talk.sonymobile.com//t5/forums/postpage",
             :title => "Ask the community !"
-          }, agent_button]
+          }]
         }]
     else
       elements = data.inject([]) do |acc, i|
@@ -62,9 +62,9 @@ module Bot
             :title => "Read it !"
           }, {
             :type => "web_url",
-            :url => "https://h30434.www3.hp.com/t5/forums/postpage",
+            :url => "https://talk.sonymobile.com///t5/forums/postpage",
             :title => "Ask the community !"
-          }, agent_button]
+          }]
         }
         acc
       end
@@ -135,13 +135,13 @@ module Bot
          },
          {
            :type => "postback",
-           :title => "Ask an HP agent",
+           :title => "Ask a Sony agent",
            :payload => "stop_bot"
          },
          {
            :type => "web_url",
-           :title => "Visit HP Instant Ink",
-           :url => "https://instantink.hpconnected.com/fr/fr"
+           :title => "Visit Sony support community",
+           :url => "http://talk.sonymobile.com/"
          }
        ]
     }
@@ -155,7 +155,7 @@ module Bot
     body = {
       :setting_type => "greeting",
       :greeting => {
-        :text => "Welcome to HP for Customer ! How can I help you ?\nWhy don't you start by asking our bot for community content ?"
+        :text => "Welcome to Sony for Customer ! How can I help you ?\nWhy don't you start by asking our bot for community content ?"
       }
     }
     HTTParty.post("https://graph.facebook.com/v2.6/me/thread_settings?access_token=#{Setting.config["page_token"]}",

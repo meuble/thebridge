@@ -2,7 +2,7 @@ require 'httparty'
 
 module Lithium
   def self.get_lithium_posts(data)
-    result = HTTParty.get("http://h30434.www3.hp.com/api/2.0/search?q=#{ERB::Util.url_encode("SELECT subject, body, id, view_href FROM messages WHERE subject MATCHES \"#{data}\"")}",
+    result = HTTParty.get("http://talk.sonymobile.com//api/2.0/search?q=#{ERB::Util.url_encode("SELECT subject, body, id, view_href FROM messages WHERE subject MATCHES \"#{data}\"")}",
         :headers => { 'Content-Type' => 'application/json' } )
 
     if result["data"] && result["data"]["size"] > 0 && result["data"]["items"]
