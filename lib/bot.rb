@@ -28,7 +28,7 @@ module Bot
         
         if message["postback"] && message["postback"]["payload"].downcase == "stop_bot"
           user.update_attributes(:bot_finished => true)
-          send_message(message["sender"]["id"], "Ok, my job is done. Now you'll be talking a Sony agent.")
+          send_message(message["sender"]["id"], "Ok, my job is done. Now you'll be talking to an agent.")
         end
         if message["postback"] && message["postback"]["payload"].downcase == "start_bot"
           user.update_attributes(:bot_finished => false)
@@ -49,6 +49,14 @@ module Bot
             :type => "web_url",
             :url => "https://talk.sonymobile.com//t5/forums/postpage",
             :title => "Ask the community !"
+          },
+          {
+            :type => "web_url",
+            :url => "https://meuble.pagekite.me/youpi_page",
+            :title => "Select Criteria",
+            :webview_height_ratio => "tall",
+            :messenger_extensions => true,
+            :fallback_url => "https://meuble.pagekite.me/youpi_page"
           }]
         }]
     else
@@ -135,7 +143,7 @@ module Bot
          },
          {
            :type => "postback",
-           :title => "Ask a Sony agent",
+           :title => "Ask an agent",
            :payload => "stop_bot"
          },
          {
@@ -179,6 +187,17 @@ module Bot
           :body => body.to_json,
           :headers => { 'Content-Type' => 'application/json' } )
       
+  end
+
+  def self.whitelist_domain
+    body = {
+      :setting_type => "domain_whitelisting",
+      :whitelisted_domains => ["https://meuble.pagekite.me/"],
+      :domain_action_type => "add"
+    }
+      HTTParty.post("https://graph.facebook.com/v2.6/me/thread_settings?access_token=#{Setting.config["page_token"]}",
+          :body => body.to_json,
+          :headers => { 'Content-Type' => 'application/json' } )
   end
     
 end

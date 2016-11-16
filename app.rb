@@ -12,7 +12,7 @@ require "./lib/setting.rb"
 ActiveRecord::Base.establish_connection(ENV["CLEARDB_DATABASE_URL"] || Setting.config["database"])
 
 class Messenger < Sinatra::Base
-  set :haml, :format => :html5
+  set :erb, :format => :html5
 
   get '/' do
     if params["hub.verify_token"] == "secret_pass"
@@ -20,6 +20,10 @@ class Messenger < Sinatra::Base
     else
       "403"
     end
+  end
+  
+  get '/youpi_page' do
+    erb :index
   end
 
   post '/' do

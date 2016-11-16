@@ -25,6 +25,7 @@ def route_with(routes)
 end
 
 route_with({
+  "0.0.0.0" => Messenger,
   "localhost" => Messenger,
   "meuble.pagekite.me" => Messenger,
   "sonybot.herokuapp.com" => Messenger
