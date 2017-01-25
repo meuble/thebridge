@@ -1,6 +1,7 @@
 require 'rubygems'
 require 'sinatra'
 require 'awesome_print'
+require 'httparty'
 require 'haml'
 require 'json'
 require "erb"
