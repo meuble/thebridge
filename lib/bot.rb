@@ -28,7 +28,7 @@ module Bot
         
         if message["postback"] && message["postback"]["payload"].downcase == "stop_bot"
           user.update_attributes(:bot_finished => true)
-          send_message(message["sender"]["id"], "Ok, my job is done. Now you'll be talking an HTC agent.")
+          send_message(message["sender"]["id"], "Ok, my job is done. Now you'll be talking an agent.")
         end
         if message["postback"] && message["postback"]["payload"].downcase == "start_bot"
           user.update_attributes(:bot_finished => false)
@@ -64,7 +64,7 @@ module Bot
             :type => "web_url",
             :url => "http://community.viveport.com/t5/forums/postpage",
             :title => "Ask the community !"
-          }, agent_button]
+          }]
         }
         acc
       end
