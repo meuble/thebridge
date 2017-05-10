@@ -1,4 +1,3 @@
-require 'httparty'
 require "./lib/user.rb"
 require "./lib/lithium.rb"
 
